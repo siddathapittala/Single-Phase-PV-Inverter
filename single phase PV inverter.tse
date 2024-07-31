@@ -1,0 +1,825 @@
+version = 4.2
+
+//
+// Saved by sw version: 2024.1
+//
+
+model "single phase PV inverter" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        reset_analog_outputs_on_sim_stop = True
+        reset_analog_outputs_on_sim_stop_mode = Offset values
+        reset_digital_outputs_on_sim_stop = True
+        vhil_adio_loopback = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+        user_cpu_part_option = "default"
+        matrix_based_reduction = True
+        cpl_dynamics_analysis = False
+        export_ss_to_pickle = False
+        ground_scope_core = False
+        dss_num_tol = 1e-15
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_platform = "generic"
+        cce_use_relative_names = False
+        cce_type_mapping_real = "double"
+        cce_type_mapping_uint = "unsigned int"
+        cce_type_mapping_int = "int"
+        cce_directory = ""
+        cce_custom_type_int = ""
+        cce_custom_type_uint = ""
+        cce_custom_type_real = ""
+        tunable_params = "component defined"
+        sp_compiler_type = "C compiler"
+        sig_stim = "off"
+        export_resource_list = ""
+        export_dependency_list = ""
+        excluded_resource_list = ""
+        export_out_file = ""
+        export_lock_top_level = True
+        export_encrypt_library = True
+        export_encrypt_resources = True
+        dae_solver = "BDF"
+        max_sim_step = 1e-4
+        simulation_time = 1.0
+        abs_tol = 1e-3
+        rel_tol = 1e-3
+        init_sim_step = 1e-6
+        r_on_sw = 1e-3
+        v_on_diode = 0.2
+        data_sampling_rate = 0
+        feedthrough_validation_error_level = error
+    }
+
+    component Subsystem Root {
+        component "core/Photovoltaic Panel" PV {
+        }
+        [
+            position = 8120, 8296
+            rotation = right
+            size = 64, 64
+        ]
+
+        component "core/Boost" Boost1 {
+            ctrl_src = "Internal modulator"
+            d_time = "1e-6"
+            fvd_def_method = "LUT"
+            ref_sig_min_max = "[-1.1, 1.1]"
+            signal_access = "Inherit"
+        }
+        [
+            position = 8616, 8296
+            size = 128, 256
+        ]
+
+        component "core/Single Phase Inverter" "Single Phase Inverter1" {
+            carrier_freq = "4000.0"
+            ctrl_src = "Internal modulator"
+            fvd_def_method = "LUT"
+            signal_access = "Inherit"
+        }
+        [
+            position = 9016, 8296
+            size = 127, 256
+        ]
+
+        component "core/Current Measurement" Ipv {
+            execution_rate = "Ts"
+            sig_output = "True"
+            signal_access = "Inherit"
+        }
+        [
+            position = 8200, 8200
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" Vpv {
+            execution_rate = "Ts"
+            sig_output = "True"
+            signal_access = "Inherit"
+        }
+        [
+            position = 8312, 8296
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Inductor" L1 {
+            inductance = "3e-3"
+            signal_access = "Inherit"
+        }
+        [
+            position = 8456, 8200
+        ]
+
+        component "core/Resistor" R1 {
+            resistance = "0.1"
+        }
+        [
+            position = 8368, 8200
+        ]
+
+        component "core/Current Measurement" Iout_boost {
+        }
+        [
+            position = 8760, 8200
+            size = 64, 32
+        ]
+
+        component "core/Capacitor" Cdc {
+            capacitance = "3e-3"
+            signal_access = "Inherit"
+        }
+        [
+            position = 8896, 8296
+            rotation = right
+        ]
+
+        component "core/Capacitor" Cf {
+            capacitance = "20e-6"
+            signal_access = "Inherit"
+        }
+        [
+            position = 9400, 8296
+            rotation = right
+        ]
+
+        component "core/Inductor" Lf {
+            inductance = "3e-3"
+            signal_access = "Inherit"
+        }
+        [
+            position = 9312, 8200
+        ]
+
+        component "core/Voltage Measurement" Vinv {
+        }
+        [
+            position = 9216, 8296
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Iout {
+        }
+        [
+            position = 9512, 8200
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" Vout {
+        }
+        [
+            position = 9632, 8296
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Resistor" Rload {
+            resistance = "100"
+        }
+        [
+            position = 9816, 8296
+            rotation = right
+        ]
+
+        component "core/Product" Product1 {
+        }
+        [
+            position = 8448, 8608
+        ]
+
+        component "core/Probe" Ppv {
+        }
+        [
+            position = 8616, 8512
+        ]
+
+        component "core/Unit Delay" "Unit Delay1" {
+        }
+        [
+            position = 8664, 8608
+        ]
+
+        component "core/Unit Delay" "Unit Delay2" {
+        }
+        [
+            position = 8536, 8736
+        ]
+
+        component "core/Sum" Sum1 {
+            signs = "+-"
+        }
+        [
+            position = 8808, 8600
+        ]
+
+        component "core/Sum" Sum2 {
+            signs = "+-"
+        }
+        [
+            position = 8664, 8728
+        ]
+
+        component "core/C function" "C function1" {
+            arb_defs = "/*Begin code section*/
+
+/*End code section*/"
+            global_variables = "real duty_cycle;real delta_duty_cycle;real min_val;real max_val;real step;"
+            init_fnc = "/*Begin code section*/
+duty_cycle = 0;
+delta_duty_cycle = 0.001;
+min_val = -0.9;
+max_val = 0.9;
+/*End code section*/"
+            input_terminals = "real power;real voltage;"
+            input_terminals_dimensions = "inherit;inherit"
+            input_terminals_feedthrough = "True;True"
+            input_terminals_show_labels = "False;False"
+            output_fnc = "/*Begin code section*/
+if(power == 0){
+    step = 0;
+}
+else if(power > 0){
+    if(voltage > 0)
+        step = -1*delta_duty_cycle;
+    else
+        step = delta_duty_cycle;
+}
+else if(power < 0){
+    if(voltage > 0)
+        step = delta_duty_cycle;
+    else
+        step = -1*delta_duty_cycle;
+}
+
+duty_cycle = duty_cycle + step;
+
+if(duty_cycle < min_val)
+    duty_cycle = min_val;
+else if(duty_cycle > max_val)
+    duty_cycle = max_val;
+
+out = duty_cycle;
+/*End code section*/"
+            output_terminals_dimensions = "inherit"
+            output_terminals_feedthrough = "True"
+            output_terminals_show_labels = "False"
+        }
+        [
+            position = 9008, 8656
+            size = 48, 48
+        ]
+
+        component "core/SCADA Input" En {
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            signal_access = "Inherit"
+            unit = ""
+        }
+        [
+            position = 8536, 8104
+        ]
+
+        component "core/Sinusoidal Source" InA {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8968, 7928
+        ]
+
+        component "core/Sinusoidal Source" InB {
+            execution_rate = "Ts"
+            phase = "180"
+        }
+        [
+            position = 8968, 8008
+        ]
+
+        component "core/Constant" Enable {
+            execution_rate = "Ts"
+        }
+        [
+            position = 8968, 8088
+        ]
+
+        component "core/Voltage Measurement" Vout_boost {
+        }
+        [
+            position = 8808, 8296
+            rotation = right
+            size = 64, 32
+        ]
+
+        tag Goto1 {
+            value = "reference"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9152, 8656
+            size = 60, 20
+        ]
+
+        tag From1 {
+            value = "reference"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8696, 8104
+            rotation = down
+            size = 60, 20
+        ]
+
+        junction Junction1 pe
+        [
+            position = 8312, 8200
+        ]
+
+        junction Junction2 pe
+        [
+            position = 8320, 8392
+        ]
+
+        junction Junction3 pe
+        [
+            position = 8832, 8200
+        ]
+
+        junction Junction4 pe
+        [
+            position = 8840, 8392
+        ]
+
+        junction Junction5 pe
+        [
+            position = 8312, 8392
+        ]
+
+        junction Junction6 pe
+        [
+            position = 8832, 8392
+        ]
+
+        junction Junction7 pe
+        [
+            position = 9216, 8200
+        ]
+
+        junction Junction8 pe
+        [
+            position = 9216, 8392
+        ]
+
+        junction Junction9 pe
+        [
+            position = 9400, 8200
+        ]
+
+        junction Junction10 pe
+        [
+            position = 9400, 8392
+        ]
+
+        junction Junction11 pe
+        [
+            position = 9632, 8200
+        ]
+
+        junction Junction12 pe
+        [
+            position = 9632, 8392
+        ]
+
+        junction Junction13 sp
+        [
+            position = 8568, 8608
+        ]
+
+        junction Junction14 sp
+        [
+            position = 8408, 8616
+        ]
+
+        junction Junction15 sp
+        [
+            position = 8568, 8560
+        ]
+
+        junction Junction16 sp
+        [
+            position = 8408, 8680
+        ]
+
+        junction Junction17 pe
+        [
+            position = 8808, 8200
+        ]
+
+        junction Junction18 pe
+        [
+            position = 8808, 8392
+        ]
+
+        connect Ipv.p_node PV.p_node as Connection1
+        connect Ipv.n_node Junction1 as Connection4
+        connect Vpv.p_node Junction1 as Connection6
+        connect Boost1.b_in Junction2 as Connection7
+        connect Junction2 PV.n_node as Connection8
+        [
+            breakpoints = 8320, 8392; 8120, 8392
+        ]
+        connect Junction1 R1.p_node as Connection10
+        connect R1.n_node L1.p_node as Connection11
+        connect L1.n_node Boost1.a_in as Connection12
+        connect Boost1.a_out Iout_boost.p_node as Connection13
+        connect Cdc.p_node Junction3 as Connection18
+        connect Junction4 "Single Phase Inverter1.neg_out" as Connection20
+        connect Vpv.n_node Junction5 as Connection22
+        connect Junction5 Junction2 as Connection23
+        connect Junction2 Junction5 as Connection24
+        connect Cdc.n_node Junction6 as Connection25
+        connect Junction6 Junction4 as Connection26
+        connect Junction4 Junction6 as Connection27
+        connect Junction3 "Single Phase Inverter1.pos_out" as Connection31
+        [
+            breakpoints = 8832, 8200; 8880, 8200
+        ]
+        connect "Single Phase Inverter1.a_in" Junction7 as Connection35
+        connect Junction7 Lf.p_node as Connection36
+        connect Vinv.p_node Junction7 as Connection37
+        connect "Single Phase Inverter1.b_in" Junction8 as Connection38
+        connect Vinv.n_node Junction8 as Connection40
+        connect Lf.n_node Junction9 as Connection41
+        connect Junction9 Cf.p_node as Connection42
+        connect Iout.p_node Junction9 as Connection43
+        connect Junction8 Junction10 as Connection45
+        connect Junction10 Cf.n_node as Connection46
+        connect Iout.n_node Junction11 as Connection48
+        connect Junction11 Vout.p_node as Connection49
+        connect Rload.p_node Junction11 as Connection50
+        connect Vout.n_node Junction12 as Connection51
+        connect Junction12 Junction10 as Connection52
+        connect Rload.n_node Junction12 as Connection53
+        connect Product1.in Ipv.out as Connection54
+        [
+            breakpoints = 8248, 8600; 8248, 8176
+        ]
+        connect Product1.out Junction13 as Connection57
+        connect "Unit Delay1.in" Junction13 as Connection59
+        connect Vpv.out Junction14 as Connection60
+        connect Junction14 Product1.in1 as Connection61
+        connect Junction13 Junction15 as Connection63
+        [
+            breakpoints = 8568, 8608
+        ]
+        connect Junction15 Ppv.in as Connection64
+        [
+            breakpoints = 8568, 8512
+        ]
+        connect Sum1.in Junction15 as Connection65
+        [
+            breakpoints = 8752, 8560; 8568, 8560
+        ]
+        connect "Unit Delay1.out" Sum1.in1 as Connection66
+        connect "Unit Delay2.out" Sum2.in1 as Connection67
+        connect "Unit Delay2.in" Junction16 as Connection68
+        connect Junction16 Junction14 as Connection69
+        connect Sum2.in Junction16 as Connection70
+        connect Sum1.out "C function1.power" as Connection71
+        connect Sum2.out "C function1.voltage" as Connection72
+        connect "C function1.out" Goto1 as Connection73
+        connect From1 Boost1.In as Connection74
+        connect En.out Boost1.En as Connection75
+        connect InA.out "Single Phase Inverter1.InA" as Connection76
+        connect InB.out "Single Phase Inverter1.InB" as Connection77
+        connect Enable.out "Single Phase Inverter1.En" as Connection78
+        connect Iout_boost.n_node Junction17 as Connection79
+        connect Junction17 Junction3 as Connection80
+        connect Vout_boost.p_node Junction17 as Connection81
+        connect Boost1.b_out Junction18 as Connection82
+        connect Junction18 Junction4 as Connection83
+        connect Vout_boost.n_node Junction18 as Connection84
+    }
+
+    default {
+        "core/C function" {
+            input_terminals = "real in;"
+            input_terminals_show_labels = "False;"
+            input_terminals_feedthrough = "True;"
+            input_terminals_dimensions = "inherit;"
+            output_terminals = "real out;"
+            output_terminals_show_labels = "False;"
+            output_terminals_feedthrough = "True;"
+            output_terminals_dimensions = "inherit;"
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            library_load_type = "Compile-time load"
+            dll_file_path = ""
+            dll_file_path_full = ""
+            arm_a9_file_path = ""
+            arm_a9_file_path_full = ""
+            arm_a53_file_path = ""
+            arm_a53_file_path_full = ""
+            h_file_path = ""
+            h_file_path_full = ""
+            add_src_path = ""
+            add_src_path_full = ""
+            convert_to_relative_dll = "True"
+            convert_to_relative_a = "True"
+            convert_to_relative_src = "True"
+            arb_defs = ""
+            add_macros = ""
+            skip_pre_cmpl_check = "False"
+            generate_for_hil = "True"
+            execution_rate = "inherit"
+            _supported_platforms = "[\'generic\']"
+            refresh = "refresh"
+        }
+
+        "core/Capacitor" {
+            signal_access = "inherit"
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Constant" {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Inductor" {
+            signal_access = "inherit"
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        "core/Probe" {
+            signal_access = "inherit"
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        "core/Product" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Resistor" {
+            resistance = "1"
+            param_set = ""
+        }
+
+        "core/SCADA Input" {
+            signal_access = "inherit"
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        "core/Sinusoidal Source" {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+            _tunable = "False"
+        }
+
+        "core/Sum" {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        "core/Unit Delay" {
+            init_value = "0"
+            signal_out_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        "core/Boost" {
+            signal_access = "inherit"
+            model_type = "Global GDS oversampling"
+            ctrl_src = "Digital inputs"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            carr_ph_offset = "0.0"
+            d_time = "5e-6"
+            ref_sig_min_max = "[-1.0, 1.0]"
+            load_mode = "on min"
+            execution_rate = "inherit"
+            S1 = "1"
+            S1_logic = "active high"
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            diode_pos = "upper_leg"
+            losses_estimation = "False"
+            fvd_def_method = "Voltage and Resistance"
+            Import_igbt_xml = "not selected"
+            Import_diode_xml = "not selected"
+            Vce = "1.3"
+            Rce = "0"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            vce_table_out = "[1.3, 1.3, 1.3, 1.3, 1.3]"
+            vd_table_out = "[1.2, 1.2, 1.2, 1.2, 1.2]"
+            et_on_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*3.8e-3, 0.4*3.8e-3, 0.8*3.8e-3, 0.68*3.8e-3, 0.9*3.8e-3], [0.65*3.8e-3, 0.9*3.8e-3, 1.2*3.8e-3, 1.5*3.8e-3, 1.7*3.8e-3], [0.9*3.8e-3, 1.3*3.8e-3, 1.7*3.8e-3, 1.9*3.8e-3, 2.25*3.8e-3], [1.1*3.8e-3, 1.7*3.8e-3, 2.1*3.8e-3, 2.3*3.8e-3, 2.5*3.8e-3]]"
+            et_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.1e-3, 0.4*2.1e-3, 0.8*2.1e-3, 0.68*2.1e-3, 0.9*2.1e-3], [0.65*2.1e-3, 0.9*2.1e-3, 1.2*2.1e-3, 1.5*2.1e-3, 1.7*2.1e-3], [0.9*2.1e-3, 1.3*2.1e-3, 1.7*2.1e-3, 1.9*2.1e-3, 2.25*2.1e-3], [1.1*2.1e-3, 1.7*2.1e-3, 2.1*2.1e-3, 2.3*2.1e-3, 2.5*2.1e-3]]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            temp_estimation = "False"
+            thermal_networks_type = "Foster"
+            switch_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            switch_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            switch_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            diode_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            diode_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            diode_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            loss_exec_rate = "100e-6"
+            visualize_luts = "Visualize Lookup Tables"
+            show_monitoring = "False"
+        }
+
+        "core/Current Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Photovoltaic Panel" {
+            signal_access = "inherit"
+            Cpv = "1e-6"
+            initial_voltage = "0"
+            sp_enable = "False"
+            mpp_enable = "False"
+            execution_rate = "100e-6"
+            normalized_en = "False"
+            Tslow = "200e-6"
+            hil_cpu_core_id = "0"
+        }
+
+        "core/Single Phase Inverter" {
+            signal_access = "inherit"
+            ctrl_src = "Digital input per switch"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            phase_op_mode = "Fixed carrier phase offset"
+            carr_ph_offset = "[0.0, 180.0]"
+            d_time = "5e-6"
+            ref_sig_min_max = "[-1.0, 1.0]"
+            load_mode = "on min"
+            execution_rate = "inherit"
+            Sa_top = "1"
+            Sa_top_logic = "active high"
+            Sa_bot = "2"
+            Sa_bot_logic = "active high"
+            Sb_top = "3"
+            Sb_top_logic = "active high"
+            Sb_bot = "4"
+            Sb_bot_logic = "active high"
+            Sa_top_I = "False"
+            Sa_bot_I = "False"
+            Sb_top_I = "False"
+            Sb_bot_I = "False"
+            losses_estimation = "False"
+            fvd_def_method = "Voltage and Resistance"
+            Import_igbt_xml = "not selected"
+            Import_diode_xml = "not selected"
+            Switch_type = "IGBT"
+            Vce = "1.3"
+            Rce = "0"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            vce_table_out = "[1.3, 1.3, 1.3, 1.3, 1.3]"
+            vd_table_out = "[1.2, 1.2, 1.2, 1.2, 1.2]"
+            et_on_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*3.8e-3, 0.4*3.8e-3, 0.8*3.8e-3, 0.68*3.8e-3, 0.9*3.8e-3], [0.65*3.8e-3, 0.9*3.8e-3, 1.2*3.8e-3, 1.5*3.8e-3, 1.7*3.8e-3], [0.9*3.8e-3, 1.3*3.8e-3, 1.7*3.8e-3, 1.9*3.8e-3, 2.25*3.8e-3], [1.1*3.8e-3, 1.7*3.8e-3, 2.1*3.8e-3, 2.3*3.8e-3, 2.5*3.8e-3]]"
+            et_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.1e-3, 0.4*2.1e-3, 0.8*2.1e-3, 0.68*2.1e-3, 0.9*2.1e-3], [0.65*2.1e-3, 0.9*2.1e-3, 1.2*2.1e-3, 1.5*2.1e-3, 1.7*2.1e-3], [0.9*2.1e-3, 1.3*2.1e-3, 1.7*2.1e-3, 1.9*2.1e-3, 2.25*2.1e-3], [1.1*2.1e-3, 1.7*2.1e-3, 2.1*2.1e-3, 2.3*2.1e-3, 2.5*2.1e-3]]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            temp_estimation = "False"
+            thermal_networks_type = "Foster"
+            switch_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            switch_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            switch_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            diode_Rth = "[0.159, 0.133, 0.120, 0.038]"
+            diode_Tth = "[1.1e-1, 1.56e-2, 1.35e-3, 1.51e-4]"
+            diode_Cth = "[0.0029, 0.0097, 0.1068, 0.8500]"
+            loss_exec_rate = "100e-6"
+            visualize_luts = "Visualize Lookup Tables"
+            show_monitoring = "False"
+            FSM_select = "converter"
+            _control_property = "all high"
+            switches_names_at_mask = "[]"
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            dtv_flag_en = "True"
+            PESB_Optimization = "True"
+            dynamic_ac_voltage = "False"
+        }
+
+        "core/Voltage Measurement" {
+            signal_access = "inherit"
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            sig_output_filt_and_full_bw = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # Numpy module is imported as 'np'
+        # Scipy module is imported as 'sp'
+        # The Schematic API is imported as 'mdl'
+        # To get the model file path, use 'mdl.get_model_file_path()'
+        # To print information to the console, use info()
+        
+        Ts = 200e-6
+    ENDCODE
+}
